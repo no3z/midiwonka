@@ -41,7 +41,9 @@
   <script src="media/Detector.js"></script>
   <script src="media/RequestAnimationFrame.js"></script>
   <script src="media/Stats.js"></script>
-
+    <script src="media/stream.js"></script>
+    <script src="media/midifile.js"></script>
+    <script src="media/replayer.js"></script>
 
  <script>
     
@@ -101,12 +103,18 @@
 	renderer.domElement.style.position = "relative";
 	container.appendChild( renderer.domElement );
 
-//	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-//	document.addEventListener( 'keydown', onDocumentKeyDown, false );
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'keydown', onDocumentKeyDown, false );
 
 	TWEEN.start();
+
+	play('media/guitarandbass.mid');
     }
 
+    function onDocumentMouseMove(event) {
+	mouseX = ( event.clientX - windowHalfX );
+	mouseY = ( event.clientY - windowHalfY );
+    }
     function onDocumentKeyDown(event) {
 	var keyCode = event.keyCode;
     }
@@ -125,7 +133,62 @@
 	renderer.render( scene, camera );
     }
 
+
+    function processmidi(midifile){
+	var light, object, materials;
+	scene.add( new THREE.AmbientLight( 0x404040 ) );
+	light = new THREE.DirectionalLight( 0xffffff );
+	light.position.z = 1;
+	scene.add( light );
+	materials = [
+	    new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
+	    new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
+	];
+
+	group = new THREE.Object3D();
+	scene.add( group );
+	for (var i = 0; i < midiFile.header.trackCount; i++)
+	{
+	    object = THREE.SceneUtils.createMultiMaterialObject( 
+		new THREE.CubeGeometry( 100, 100, 100, 4, 4, 4 ), materials );
+
+	    object.position.set( i * 5,i *10, i*9 );
+	    group.add( object );
+	}
+
+    }
+
+    function loadRemote(path, callback) {
+	var fetch = new XMLHttpRequest();
+	fetch.open('GET', path);
+	fetch.overrideMimeType("text/plain; charset=x-user-defined");
+	fetch.onreadystatechange = function() {
+	    if(this.readyState == 4 && this.status == 200) {
+		/* munge response into a binary string */
+		var t = this.responseText || "" ;
+		var ff = [];
+		var mx = t.length;
+		var scc= String.fromCharCode;
+		for (var z = 0; z < mx; z++) {
+		    ff[z] = scc(t.charCodeAt(z) & 255);
+		}
+		callback(ff.join(""));
+	    }
+	}
+	fetch.send();
+    }
+    
+    function play(file) {
+	loadRemote(file, function(data) {
+	    midiFile = MidiFile(data);
+	    processmidi(midiFile);
+	})}
+
+    
+    
     </script>
+
+   
 
 </body>
 </html>

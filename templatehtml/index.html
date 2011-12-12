@@ -41,5 +41,91 @@
   <script src="media/Detector.js"></script>
   <script src="media/RequestAnimationFrame.js"></script>
   <script src="media/Stats.js"></script>
+
+
+ <script>
+    
+    if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+    
+    var SCREEN_WIDTH = window.innerWidth;
+    var SCREEN_HEIGHT = window.innerHeight;
+    
+    var container,stats;
+    
+    var camera, scene, renderer;
+    
+    var mouseX = 0, mouseY = 0;
+    
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    init();
+    animate();
+	
+    function init() {
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
+	camera = new THREE.PerspectiveCamera( 35, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 5000 );
+	camera.position.z = 1500;
+
+	scene = new THREE.Scene();
+	scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
+	var imageCanvas = document.createElement( "canvas" ),
+	    context = imageCanvas.getContext( "2d" );
+	
+	imageCanvas.width = imageCanvas.height = 128;
+	context.fillStyle = "#444";
+	context.fillRect( 0, 0, 128, 128 );
+	context.fillStyle = "#fff";
+	context.fillRect( 0, 0, 64, 64);
+	context.fillRect( 64, 64, 64, 64 );
+	    
+	var textureCanvas = new THREE.Texture( imageCanvas, THREE.UVMapping, THREE.RepeatWrapping, THREE.RepeatWrapping );
+	materialCanvas = new THREE.MeshBasicMaterial( { map: textureCanvas } );
+	textureCanvas.needsUpdate = true;
+	textureCanvas.repeat.set( 1000, 1000 );
+	var geometry = new THREE.PlaneGeometry( 100, 100 );
+	meshCanvas = new THREE.Mesh( geometry, materialCanvas );
+	meshCanvas.rotation.x = Math.PI / 2;
+	meshCanvas.scale.set( 1000, 1000, 1000 );
+	meshCanvas.doubleSided = true;
+	var floorHeight = - 1.117 * 576/2;
+	meshCanvas.position.y = floorHeight;
+	scene.add( meshCanvas );
+	
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	renderer.setClearColor( scene.fog.color, 1 );
+	renderer.autoClear = false;
+
+	renderer.domElement.style.position = "relative";
+	container.appendChild( renderer.domElement );
+
+//	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+//	document.addEventListener( 'keydown', onDocumentKeyDown, false );
+
+	TWEEN.start();
+    }
+
+    function onDocumentKeyDown(event) {
+	var keyCode = event.keyCode;
+    }
+
+
+    function animate() {
+	requestAnimationFrame( animate );
+	render();
+    }
+
+    function render() {
+	camera.position.x += ( mouseX - camera.position.x ) * .05;
+	camera.position.y += ( - ( mouseY - 200) - camera.position.y ) * .05;
+	camera.lookAt( scene.position );
+	renderer.clear();
+	renderer.render( scene, camera );
+    }
+
+    </script>
+
 </body>
 </html>

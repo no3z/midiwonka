@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>midiwonka</title>
-	<link href="media/style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-  <div id="wrapper"></div>
+  <title>midiwonka</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    body {
+    color: #aaa;
+    font-family:Monospace;
+    font-size:13px;
+    text-align:center;
+    
+    background-color: #000;
+    margin: 0px;
+    overflow: hidden;
+    }
+    
+    #info {
+    position: absolute;
+    top: 0px; width: 100%;
+    padding: 5px;
+    z-index:100;
+    }
+    
+    .lbl { color:#fff; font-size:20px; font-weight:bold; position: absolute; bottom:0%; z-index:100; text-shadow:#000 1px 1px 1px; background-color:rgba(0,0,0,0.85); padding:1em }
+    #lbl_left { text-align:center; width:100%; margin:auto;   display:table; }
+    
+    .g { color:#aaa }
+    .c { color:#fa0 }
+    a { color:red }
+  </style>
 
+</head>
+
+<body>
+  <div id="lbl_left" class="lbl">_do_midi_wonka()
+  </div>
+  <script src="media/Three.js"></script>
+  <script src="media/Tween.js"></script>
+  <script src="media/Detector.js"></script>
+  <script src="media/RequestAnimationFrame.js"></script>
+  <script src="media/Stats.js"></script>
 </body>
 </html>

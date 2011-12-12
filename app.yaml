@@ -1,4 +1,4 @@
-application: midiwonka
+application: lembraquis
 version: 1
 runtime: python
 api_version: 1
@@ -10,7 +10,7 @@ handlers:
 
 
 - url: /.*
-  script: midiWonka.py
+  script: lembraquis.py
 
 
 

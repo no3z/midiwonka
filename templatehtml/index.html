@@ -149,10 +149,11 @@
 	scene.add( group );
 	for (var i = 0; i < midiFile.header.trackCount; i++)
 	{
+	    
 	    object = THREE.SceneUtils.createMultiMaterialObject( 
 		new THREE.CubeGeometry( 100, 100, 100, 4, 4, 4 ), materials );
 
-	    object.position.set( i * 5,i *10, i*9 );
+	    object.position.set( i * 10,i *20, i*20 );
 	    group.add( object );
 	}
 
